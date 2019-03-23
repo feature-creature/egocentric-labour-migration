@@ -12,124 +12,128 @@ div.odk-header-back-btn{
 }
 
 #languagePopup .btn-group-vertical>.btn, #optionsPopup .btn-group-vertical>.btn, #confirmExitPopup .btn-group-vertical>.btn{
-	width: 92%;
+	/*width: 92%;*/
 }
 
 svg{
+	margin-top:25px;
+	display:block;
 	height:800px;
 	width:650px;
-	display:block;
-	/*border:solid orange 1px;*/
-	margin-top:25px;
 }
 
 /* ------------------------------------------------------- */
 /* ------------------- node attributes ------------------- */
 /* ------------------------------------------------------- */
 .nodes circle {
-    fill:white;
-    stroke: gray;
     stroke-width: 1.5;
+    stroke: gray;
+    fill:white;
 }
 
 /* selection */
 .nodes g.active circle{
-    fill:pink;
-    stroke: gray;
     stroke-width: 1.5;
+    stroke: gray;
+    fill:pink;
 }
 
-/* ------------------- actor attributes ------------------- */
-.nodes g[data-previous-migration="yes"] circle{
-    fill:#ffd68a;
-    fill:#ffe5b5;
-    fill:gray;
-    fill:#ccc;
-}
-.nodes g[data-previous-migration="no"] circle{
+/* ------------------- actor general ------------------- */
+.nodes g[data-previous-migration="yes"] circle{}
+.nodes g[data-previous-migration="no"] circle{}
 
-}
+/* ------------------- social - nonBroker general ------------------- */
+.nodes g[data-type="nonBroker"] circle{}
+.nodes g[data-type="nonBroker"][data-migrated-together="yes"] circle{}
+.nodes g[data-type="nonBroker"][data-migrated-together="no"] circle{}
+.nodes g[data-type="nonBroker"][data-previous-broker="yes"] circle{}
+.nodes g[data-type="nonBroker"][data-previous-broker="no"] circle{}
 
-/* ------------------- migrant attributes ------------------- */
-.nodes g[data-type="migrant"] circle{
-    fill:#ffb01d;
-    fill:#ffe5b5;
-}
 
-/* ------------------- broker attributes ------------------- */
-.nodes g[data-type="broker"] circle{
-    /*fill:#cfe8ff;*/
-}
+/* ------------------- broker general ------------------- */
+.nodes g[data-type="broker"] circle{}
 
 .nodes g[data-type="broker"] circle[data-broker="true"]{
     stroke-width:7;
+    stroke-opacity: 0.25;
+}
+
+/* ------------------- broker - light broker ring ------------------- */
+.nodes g[data-type="broker"][data-agentForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-brokerForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-previousRecruiter="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.25;
+}
+
+/* ------------------- broker - dark broker ring ------------------- */
+.nodes g[data-type="broker"][data-recruiterAgentForMigrant="yes"] circle[data-broker="true"]{
     stroke-opacity: 0.85;
-    stroke-opacity: 0.25;
 }
 
-.nodes g[data-type="broker"][data-workedForRecruitmentAgency="yes"] circle[data-broker="true"]{
+/* ------------------- employer - light broker ring ------------------- */
+.nodes g[data-type="employer"][data-agentForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="employer"][data-brokerForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="employer"][data-previousRecruiter="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.25;
+    stroke-width:7;
+}
+
+/* ------------------- employer - dark broker ring ------------------- */
+.nodes g[data-type="employer"][data-recruiterAgentForMigrant="yes"] circle[data-broker="true"]{
     stroke-opacity: 0.85;
 }
-.nodes g[data-type="broker"][data-workedForRecruitmentAgency="no"] circle[data-broker="true"]{
-    stroke-opacity: 0.25;
-}
-.nodes g[data-type="broker"][data-workedForRecruitmentAgency="unknown"] circle[data-broker="true"]{
-    stroke-opacity: 0.25;
-}
 
-/* ------------------- nonbroker attributes ------------------- */
-.nodes g[data-type="nonBroker"] circle{
-}
-.nodes g[data-type="nonBroker"][data-migrated-together="yes"] circle{
-}
-.nodes g[data-type="nonBroker"][data-migrated-together="no"] circle{
-}
-.nodes g[data-type="nonBroker"][data-previous-broker="yes"] circle{
-}
-.nodes g[data-type="nonBroker"][data-previous-broker="no"] circle{
-}
-
-/* ------------------- employer attributes ------------------- */
+/* ------------------- employer - employer ring ------------------- */
+.nodes g[data-employer="true"] circle[data-employer="true"],
+.nodes g[data-firstEmployer="true"] circle[data-employer="true"],
 .nodes g[data-type="employer"] circle[data-employer="true"]{
+    stroke-opacity:0.6;
     stroke-width:10;
     stroke:navy;
-    stroke-opacity:0.6;
 }
 
-.nodes g[data-type="employer"] circle[data-broker="true"]{
-    stroke-width:7;
-    stroke-opacity: 0.85;
+.nodes g[data-type="employer"][data-employer="yes"] circle[data-employer="true"]{
     stroke-opacity: 0.25;
+}
+.nodes g[data-type="employer"][data-firstEmployer="yes"] circle[data-employer="true"]{
+    stroke-opacity: 0.85;
 }
 
-.nodes g[data-type="employer"][data-workedForRecruitmentAgency="yes"] circle[data-broker="true"]{
-    stroke-opacity: 0.85;
+/* ------------------- migrant general ------------------- */
+.nodes g[data-type="migrant"] circle{
+    fill:#ffe5b5;
 }
-.nodes g[data-type="employer"][data-workedForRecruitmentAgency="no"] circle[data-broker="true"]{
-    stroke-opacity: 0.25;
-}
-.nodes g[data-type="employer"][data-workedForRecruitmentAgency="unknown"] circle[data-broker="true"]{
-    stroke-opacity: 0.25;
-}
+
 
 /* ------------------------------------------------------- */
 /* ------------------- link attributes ------------------- */
 /* ------------------------------------------------------- */
+
+
 .links line{
 	stroke:gray;
 }
+
+/* ------------------- payment - positive ------------------- */
 .links g[data-paidMigrantExpenses="yes"] line[data-payment="true"][data-paidMigrantExpenses="yes"], .links g[data-loanedMigrantExpenses="yes"] line[data-payment="true"][data-loanedMigrantExpenses="yes"]{
     fill:green;
     stroke:green;
     opacity:0.25;
     stroke-width: 7;
 }
-.links g[data-chargedMigrantExpenses="yes"] line[data-payment="true"][data-chargedMigrantExpenses="yes"], .links g[data-receivedPayment="yes"] line[data-payment="true"][data-receivedPayment="yes"]{
+
+/* ------------------- payment - negative ------------------- */
+.links g[data-chargedMigrantExpenses="yes"] line[data-payment="true"][data-chargedMigrantExpenses="yes"], .links g[data-migrantDebt="yes"] line[data-payment="true"][data-migrantDebt="yes"]{
     fill:red;
     stroke:red;
     opacity:0.25;
     stroke-width:7;
 }
+
+
+/* ------------------------------------------------------- */
+/* ------------------- general styles ------------------- */
+/* ------------------------------------------------------- */
 
 text {
   	font-size: 12px;
@@ -154,6 +158,7 @@ button.timeStage.active{
     background-color: #ffe5b5;
 }
 
+
 .links.timeStage.active{
     background-color:#ccc;
 }
@@ -167,8 +172,6 @@ button.timeStage.active{
 <svg width="650" height="800"></svg>
 
 <script>
-/* ------------------------------------------------------- */
-/* ------------------- node attributes ------------------- */
 
 console.log('viz');
 
@@ -241,73 +244,135 @@ function addActorsToNetwork(actors,network){
         var actorType = "nonBroker";
         
         // broker actor (general)
-        if(actors.getData(i,'broker')== "yes" 
-            || actors.getData(i,'unnamedBroker') == "yes" 
-            || actors.getData(i,'jusong')== "yes"
-            || actors.getData(i,'workedForRecruitmentAgency')== "yes"
+        if(actors.getData(i,"previousRecruiter") == "yes"
+			|| actors.getData(i,"brokerForMigrant") == "yes"
+			|| actors.getData(i,"agentForMigrant") == "yes"
+			|| actors.getData(i,"recruiterAgentForMigrant") == "yes"
         ){
         	actorType="broker"
     	}
 
         // employer actor
-        if(actors.getData(i,'employer') == "yes"){actorType="employer"}
+        if(actors.getData(i,'employer') == "yes"|| actors.getData(i,"firstEmployer") == "yes"){actorType="employer"}
         
 		// add actor to network
         network.nodes.push({
+
+			"chargedMigrantExpenses":actors.getData(i,"chargedMigrantExpenses"),
+			"paidMigrantExpenses":actors.getData(i,"paidMigrantExpenses"),
+			"loanedMigrantExpenses":actors.getData(i,"loanedMigrantExpenses"),
+			"migrantDebt":actors.getData(i,"migrantDebt"),
+
+	
+			"previousRecruiter":actors.getData(i,"previousRecruiter"),
+			"brokerForMigrant":actors.getData(i,"brokerForMigrant"),
+
+			"agentForMigrant":actors.getData(i,"agentForMigrant"),
+			"recruiterAgentForMigrant":actors.getData(i,"recruiterAgentForMigrant"),
+			
+
+			"firstEmployer":actors.getData(i,"firstEmployer"),
+			"employer":actors.getData(i,"employer"),
+			
+
         	"id":actors.getData(i,'_id'),
-			"name":actors.getData(i,'name'),
         	"type":actorType,
-        	"broker":actors.getData(i,'broker'),
-        	"unnamedBroker":actors.getData(i,'unnamedBroker'),
-        	"license":actors.getData(i,'license'),
-        	"employer":actors.getData(i,'employer'),
-			"previousMigration":"yes",
-			"stages":"decision how destination transit coordination",
-        	"firstSuggestion":actors.getData(i,'firstSuggestion'),
-			"neededPermission":actors.getData(i,'neededPermission'),
-			"wantedBlessing":actors.getData(i,'wantedBlessing'),
-			"chargedMigrantExpenses":actors.getData(i,'chargedMigrantExpenses'),
-			"paidMigrantExpenses":actors.getData(i,'paidMigrantExpenses'),
-			"loanedMigrantExpenses":actors.getData(i,'loanedMigrantExpenses'),
-			"finalDecision":actors.getData(i,'finalDecision'),
-			"encouragement":actors.getData(i,'encouragement'),
-			"discouragement":actors.getData(i,'discouragement'),
-			"migrationModeller":actors.getData(i,'migrationModeller'),
-			"refuseReaction":actors.getData(i,'refuseReaction'),
-			"providedGeneralInformation":actors.getData(i,'generalInformation'),
-			"recruiterArrangements":actors.getData(i,'recruiterArrangements'),
-			"nonbrokerArrangements":actors.getData(i,'nonbrokerArrangements'),
-			"introducedBrokers":actors.getData(i,'introducedBrokers'),
-			"sharedHonestFeelings":actors.getData(i,'honestFeelings'),
-			"coMigration":actors.getData(i,'coMigration'),
-			"inTransitHelp":actors.getData(i,'inTransitHelp'),
-			"unnamedImportantPlanner":actors.getData(i,'unnamedImportantPlanners'),
-			"trustAgain":actors.getData(i,'trustAgain'),
-			"mostValuableHelp":actors.getData(i,'mostValuableHelp'),
-			"causedProblems":actors.getData(i,'knowinglyOrUnknowinglyCauseProblems'),
-			"alsoAttendedTrainings":actors.getData(i,'alsoAttendedTrainings'),
+			"name":actors.getData(i,"name"),
+			"age":actors.getData(i,"age"),
+			"remittances":actors.getData(i,"remittances"),
+			"coMigration":actors.getData(i,"coMigration"),
+			"ageApproximate":actors.getData(i,"ageApproximate"),
+			"ageBirthYearMyanmar":actors.getData(i,"ageBirthYearMyanmar"),
+			"ageBirthYearThailand":actors.getData(i,"ageBirthYearThailand"),
+			"ageBirthYearEnglish":actors.getData(i,"ageBirthYearEnglish"),
+			"gender":actors.getData(i,"gender"),
+			"relationshipToMigrant":actors.getData(i,"relationshipToMigrant"),
+			"personalMattersDiscussionFrequency":actors.getData(i,"personalMattersDiscussionFrequency"),
+			"relationalWealth":actors.getData(i,"relationalWealth"),
+			"firstSuggestion":actors.getData(i,"firstSuggestion"),
+			"neededPermission":actors.getData(i,"neededPermission"),
+			"wantedBlessing":actors.getData(i,"wantedBlessing"),
+			"finalDecision":actors.getData(i,"finalDecision"),
+			"encouragement":actors.getData(i,"encouragement"),
+			"discouragement":actors.getData(i,"discouragement"),
+			"migrationModeller":actors.getData(i,"migrationModeller"),
+			"refuseReaction":actors.getData(i,"refuseReaction"),
+			"generalInformation":actors.getData(i,"generalInformation"),
 			"arrangedMigration":actors.getData(i,"arrangedMigration"),
 			"arrangedDestination":actors.getData(i,"arrangedDestination"),
 			"arrangedWork":actors.getData(i,"arrangedWork"),
-			"arrangedTravel":actors.getData(i,"arrangedTravel"),
+			"arrangedContractBefore":actors.getData(i,"arrangedContractBefore"),
+			"arrangedContractAfter":actors.getData(i,"arrangedContractAfter"),
+			"arrangedTravelDocumentation":actors.getData(i,"arrangedTravelDocumentation"),
 			"arrangedTransportation":actors.getData(i,"arrangedTransportation"),
 			"arrangedAccommodation":actors.getData(i,"arrangedAccommodation"),
-			"workedForRecruitmentAgency":actors.getData(i,"workedForRecruitmentAgency"),
-			"helpedOtherMigrants":actors.getData(i,"helpedOtherMigrants"),
-			"jusong":actors.getData(i,"jusong"),
 			"predepartureDiscussionPersonInThailand":actors.getData(i,"predepartureDiscussionPersonInThailand"),
-			"receivedPayment":actors.getData(i,"receivedPayment")
+			"honestFeelings":actors.getData(i,"honestFeelings"),
+			"alsoAttendedTrainings":actors.getData(i,"alsoAttendedTrainings"),
+			"inTransitHelp":actors.getData(i,"inTransitHelp"),
+			"unnamedImportantPlanners":actors.getData(i,"unnamedImportantPlanners"),
+			"myanmarNational":actors.getData(i,"myanmarNational"),
+			"thailandNational":actors.getData(i,"thailandNational"),
+			"sameEthnicity":actors.getData(i,"sameEthnicity"),
+			"migratedThailandBeforeMigrant":actors.getData(i,"migratedThailandBeforeMigrant"),
+			"migratedThailandAfterMigrant":actors.getData(i,"migratedThailandAfterMigrant"),
+			"currentlyInThailand":actors.getData(i,"currentlyInThailand"),
+			"arrangedForOthers":actors.getData(i,"arrangedForOthers"),
+			"seekHelpAgain":actors.getData(i,"seekHelpAgain"),
+			"mostValuableHelp":actors.getData(i,"mostValuableHelp"),
+			"causedProblems":actors.getData(i,"causedProblems"),
+			"expectationsDestination":actors.getData(i,"expectationsDestination"),
+			"expectationsWorkType":actors.getData(i,"expectationsWorkType"),
+			"expectationsJobSite":actors.getData(i,"expectationsJobSite"),
+			"expectationsCompanyName":actors.getData(i,"expectationsCompanyName"),
+			"expectationsLivingArrangements":actors.getData(i,"expectationsLivingArrangements"),
+			"expectationsAmountPaid":actors.getData(i,"expectationsAmountPaid"),
+			"expectationsOftenPaid":actors.getData(i,"expectationsOftenPaid"),
+			"expectationsWorkingHours":actors.getData(i,"expectationsWorkingHours"),
+			"expectationsOvertimeHours":actors.getData(i,"expectationsOvertimeHours"),
+			"expectationsOvertimePay":actors.getData(i,"expectationsOvertimePay"),
+			"expectationsTimeOff":actors.getData(i,"expectationsTimeOff"),
+			"expectationsLawfulDeductions":actors.getData(i,"expectationsLawfulDeductions"),
+			"expectationsForeignWorkerRights":actors.getData(i,"expectationsForeignWorkerRights"),
+			"expectationsContractDuration":actors.getData(i,"expectationsContractDuration"),
+			"expectationsEarlyTerminationPenalties":actors.getData(i,"expectationsEarlyTerminationPenalties"),
+			"expectationsRecruitmentFees":actors.getData(i,"expectationsRecruitmentFees"),
+			"expectationsTransportationCosts":actors.getData(i,"expectationsTransportationCosts"),
+			"expectationsTransportationPlan":actors.getData(i,"expectationsTransportationPlan"),
+			"expectationsTransportationDocumentationPlan":actors.getData(i,"expectationsTransportationDocumentationPlan"),
+			"expectationsTransportationDocumentationCosts":actors.getData(i,"expectationsTransportationDocumentationCosts"),
+			"deductions":actors.getData(i,"deductions"),
+			"lockedInRoom":actors.getData(i,"lockedInRoom"),
+			"refusedOvertimePay":actors.getData(i,"refusedOvertimePay"),
+			"limitedBreaks":actors.getData(i,"limitedBreaks"),
+			"workWhenSick":actors.getData(i,"workWhenSick"),
+			"dangerousWork":actors.getData(i,"dangerousWork"),
+			"workedLonger":actors.getData(i,"workedLonger"),
+			"restrictedMovement":actors.getData(i,"restrictedMovement"),
+			"threatenNoPay":actors.getData(i,"threatenNoPay"),
+			"threatenDismissal":actors.getData(i,"threatenDismissal"),
+			"takenPassport":actors.getData(i,"takenPassport"),
+			"threatenInjury":actors.getData(i,"threatenInjury"),
+			"damagedBelongings":actors.getData(i,"damagedBelongings"),
+			"slappedHitThrowSomething":actors.getData(i,"slappedHitThrowSomething"),
+			"pushedKickedBeaten":actors.getData(i,"pushedKickedBeaten"),
+			"tiedUpChoked":actors.getData(i,"tiedUpChoked"),
+			"threatenWeaponUse":actors.getData(i,"threatenWeaponUse"),
+			"burnYou":actors.getData(i,"burnYou"),
+			"forcedSex":actors.getData(i,"forcedSex"),
+			"forcedSubstances":actors.getData(i,"forcedSubstances")
+
 
         });
 
-    	// add link migrant <-> actor
+    	// add initial link migrant <-> actor
         network.links.push({
         	"source": migrant,
         	"target":actors.getData(i,'_id'),
         	"paidMigrantExpenses":actors.getData(i,'paidMigrantExpenses'),
         	"loanedMigrantExpenses":actors.getData(i,'loanedMigrantExpenses'),
         	"chargedMigrantExpenses":actors.getData(i,'chargedMigrantExpenses'),
-        	"receivedPayment":actors.getData(i,'receivedPayment'),
+        	"migrantDebt":actors.getData(i,'migrantDebt'),
         	"value":"1"
         });
     }
@@ -342,14 +407,21 @@ function drawViz(network){
 		.attr("data-paidMigrantExpenses", function(d) { return d.paidMigrantExpenses;})
 		.attr("data-chargedMigrantExpenses", function(d) { return d.chargedMigrantExpenses;})
 		.attr("data-loanedMigrantExpenses", function(d) { return d.loanedMigrantExpenses;})
-		.attr("data-receivedPayment", function(d) { return d.receivedPayment;})
+		.attr("data-migrantDebt", function(d) { return d.migrantDebt;})
 		.append("line")
 		.attr("stroke-width", function(d) { return Math.sqrt(d.value); })
 
-	paymentsToMigrants = d3version4.selectAll("[data-paidMigrantExpenses=yes],[data-loanedMigrantExpenses=yes]").append("line")
-		.attr('data-payment','true').attr('data-paidMigrantExpenses','yes').attr('data-loanedMigrantExpenses','yes');
-	paymentsFromMigrants = d3version4.selectAll("[data-chargedMigrantExpenses=yes],[data-receivedPayment=yes]").append("line")
-		.attr('data-payment','true').attr('data-chargedMigrantExpenses','yes').attr('data-receivedPayment','yes');
+	paymentsToMigrants = d3version4.selectAll("[data-paidMigrantExpenses=yes],[data-loanedMigrantExpenses=yes]")
+		.append("line")
+		.attr('data-payment','true')
+		.attr('data-paidMigrantExpenses','yes')
+		.attr('data-loanedMigrantExpenses','yes');
+	
+	paymentsFromMigrants = d3version4.selectAll("[data-chargedMigrantExpenses=yes],[data-migrantDebt=yes]")
+		.append("line")
+		.attr('data-payment','true')
+		.attr('data-chargedMigrantExpenses','yes')
+		.attr('data-migrantDebt','yes');
 
 	// ===================================================================================================
 	
@@ -358,50 +430,102 @@ function drawViz(network){
 		.selectAll("g")
 		.data(network.nodes)
 		.enter().append("g")
-		.attr("data-id", function(d) { return d.id; })
-		.attr("data-broker", function(d) { return d.broker; })
-		.attr("data-unnamedBroker", function(d) { return d.unnamedBroker; })
-		.attr("data-license", function(d) { return d.license; })
-		.attr("data-employer", function(d) { return d.employer; })
-		.attr("data-name", function(d) {return d.name})
-		.attr("data-type", function(d) { return d.type;})
-		.attr("data-stages", function(d) { return d.stages;})
-		.attr("data-trustAgain", function(d) { return d.trustAgain;})
-		.attr("data-coMigration", function(d) { return d.coMigration;})
-		.attr("data-inTransitHelp", function(d) { return d.inTransitHelp;})
-		.attr("data-finalDecision", function(d) { return d.finalDecision;})
-		.attr("data-encouragement", function(d) { return d.encouragement;})
-		.attr("data-wantedBlessing", function(d) {return d.wantedBlessing;})
-		.attr("data-wantedBlessing", function(d) { return d.wantedBlessing;})
-		.attr("data-discouragement", function(d) { return d.discouragement;})
-		.attr("data-refuseReaction", function(d) { return d.refuseReaction;})
-		.attr("data-firstSuggestion", function(d) { return d.firstSuggestion;})
-		.attr("data-causedProblems", function(d) { return d.causedProblems;})
-		.attr("data-previousMigration",function(d) {return d.previousMigration})
-		.attr("data-mostValuableHelp", function(d) { return d.mostValuableHelp;})
-		.attr("data-neededPermission", function(d) { return d.neededPermission;})
-		.attr("data-introducedBrokers", function(d) { return d.introducedBrokers;})
-		.attr("data-migrationModeller", function(d) { return d.migrationModeller;})
-		.attr("data-paidMigrantExpenses", function(d) {return d.paidMigrantExpenses;})
-		.attr("data-sharedHonestFeelings", function(d) { return d.sharedHonestFeelings;})
-		.attr("data-recruiterArrangements", function(d) { return d.recruiterArrangements;})
-		.attr("data-nonbrokerArrangements", function(d) { return d.nonbrokerArrangements;})
-		.attr("data-alsoAttendedTrainings", function(d) { return d.alsoAttendedTrainings;})
-		.attr("data-chargedMigrantExpenses", function(d) {return d.chargedMigrantExpenses;})
-		.attr("data-unnamedImportantPlanner", function(d) { return d.unnamedImportantPlanner;})
-		.attr("data-providedGeneralInformation", function(d) { return d.providedGeneralInformation;})
-		.attr("data-arrangedMigration", function(d){return d.arrangedMigration;})
-		.attr("data-arrangedDestination", function(d){return d.arrangedDestination;})
-		.attr("data-arrangedWork", function(d){return d.arrangedWork;})
-		.attr("data-arrangedTravel", function(d){return d.arrangedTravel;})
-		.attr("data-arrangedTransportation", function(d){return d.arrangedTransportation;})
-		.attr("data-arrangedAccommodation", function(d){return d.arrangedAccommodation;})
-		.attr("data-workedForRecruitmentAgency", function(d){return d.workedForRecruitmentAgency;})
-		.attr("data-helpedOtherMigrants", function(d){return d.helpedOtherMigrants;})
-		.attr("data-jusong", function(d){return d.jusong;})
-		.attr("data-receivedPayment", function(d){return d.receivedPayment;})
-		.attr("data-predepartureDiscussionPersonInThailand", function(d){return d.predepartureDiscussionPersonInThailand;});
-
+		.attr("data-type",function(d){return d.type;})
+		.attr("data-chargedMigrantExpenses",function(d){return d.chargedMigrantExpenses;})
+		.attr("data-paidMigrantExpenses",function(d){return d.paidMigrantExpenses;})
+		.attr("data-loanedMigrantExpenses",function(d){return d.loanedMigrantExpenses;})
+		.attr("data-migrantDebt",function(d){return d.migrantDebt;})
+		.attr("data-previousRecruiter",function(d){return d.previousRecruiter;})
+		.attr("data-brokerForMigrant",function(d){return d.brokerForMigrant;})
+		.attr("data-agentForMigrant",function(d){return d.agentForMigrant;})
+		.attr("data-recruiterAgentForMigrant",function(d){return d.recruiterAgentForMigrant;})
+		.attr("data-firstEmployer",function(d){return d.firstEmployer;})
+		.attr("data-employer",function(d){return d.employer;})			
+		.attr("data-id",function(d){return d.id;})
+		.attr("data-name",function(d){return d.name;})
+		.attr("data-age",function(d){return d.age;})
+		.attr("data-remittances",function(d){return d.remittances;})
+		.attr("data-coMigration",function(d){return d.coMigration;})
+		.attr("data-ageApproximate",function(d){return d.ageApproximate;})
+		.attr("data-ageBirthYearMyanmar",function(d){return d.ageBirthYearMyanmar;})
+		.attr("data-ageBirthYearThailand",function(d){return d.ageBirthYearThailand;})
+		.attr("data-ageBirthYearEnglish",function(d){return d.ageBirthYearEnglish;})
+		.attr("data-gender",function(d){return d.gender;})
+		.attr("data-relationshipToMigrant",function(d){return d.relationshipToMigrant;})
+		.attr("data-personalMattersDiscussionFrequency",function(d){return d.personalMattersDiscussionFrequency;})
+		.attr("data-relationalWealth",function(d){return d.relationalWealth;})
+		.attr("data-firstSuggestion",function(d){return d.firstSuggestion;})
+		.attr("data-neededPermission",function(d){return d.neededPermission;})
+		.attr("data-wantedBlessing",function(d){return d.wantedBlessing;})
+		.attr("data-finalDecision",function(d){return d.finalDecision;})
+		.attr("data-encouragement",function(d){return d.encouragement;})
+		.attr("data-discouragement",function(d){return d.discouragement;})
+		.attr("data-migrationModeller",function(d){return d.migrationModeller;})
+		.attr("data-refuseReaction",function(d){return d.refuseReaction;})
+		.attr("data-generalInformation",function(d){return d.generalInformation;})
+		.attr("data-arrangedMigration",function(d){return d.arrangedMigration;})
+		.attr("data-arrangedDestination",function(d){return d.arrangedDestination;})
+		.attr("data-arrangedWork",function(d){return d.arrangedWork;})
+		.attr("data-arrangedContractBefore",function(d){return d.arrangedContractBefore;})
+		.attr("data-arrangedContractAfter",function(d){return d.arrangedContractAfter;})
+		.attr("data-arrangedTravelDocumentation",function(d){return d.arrangedTravelDocumentation;})
+		.attr("data-arrangedTransportation",function(d){return d.arrangedTransportation;})
+		.attr("data-arrangedAccommodation",function(d){return d.arrangedAccommodation;})
+		.attr("data-predepartureDiscussionPersonInThailand",function(d){return d.predepartureDiscussionPersonInThailand;})
+		.attr("data-honestFeelings",function(d){return d.honestFeelings;})
+		.attr("data-alsoAttendedTrainings",function(d){return d.alsoAttendedTrainings;})
+		.attr("data-inTransitHelp",function(d){return d.inTransitHelp;})
+		.attr("data-unnamedImportantPlanners",function(d){return d.unnamedImportantPlanners;})
+		.attr("data-myanmarNational",function(d){return d.myanmarNational;})
+		.attr("data-thailandNational",function(d){return d.thailandNational;})
+		.attr("data-sameEthnicity",function(d){return d.sameEthnicity;})
+		.attr("data-migratedThailandBeforeMigrant",function(d){return d.migratedThailandBeforeMigrant;})
+		.attr("data-migratedThailandAfterMigrant",function(d){return d.migratedThailandAfterMigrant;})
+		.attr("data-currentlyInThailand",function(d){return d.currentlyInThailand;})
+		.attr("data-arrangedForOthers",function(d){return d.arrangedForOthers;})
+		.attr("data-seekHelpAgain",function(d){return d.seekHelpAgain;})
+		.attr("data-mostValuableHelp",function(d){return d.mostValuableHelp;})
+		.attr("data-causedProblems",function(d){return d.causedProblems;})
+		.attr("data-expectationsDestination",function(d){return d.expectationsDestination;})
+		.attr("data-expectationsWorkType",function(d){return d.expectationsWorkType;})
+		.attr("data-expectationsJobSite",function(d){return d.expectationsJobSite;})
+		.attr("data-expectationsCompanyName",function(d){return d.expectationsCompanyName;})
+		.attr("data-expectationsLivingArrangements",function(d){return d.expectationsLivingArrangements;})
+		.attr("data-expectationsAmountPaid",function(d){return d.expectationsAmountPaid;})
+		.attr("data-expectationsOftenPaid",function(d){return d.expectationsOftenPaid;})
+		.attr("data-expectationsWorkingHours",function(d){return d.expectationsWorkingHours;})
+		.attr("data-expectationsOvertimeHours",function(d){return d.expectationsOvertimeHours;})
+		.attr("data-expectationsOvertimePay",function(d){return d.expectationsOvertimePay;})
+		.attr("data-expectationsTimeOff",function(d){return d.expectationsTimeOff;})
+		.attr("data-expectationsLawfulDeductions",function(d){return d.expectationsLawfulDeductions;})
+		.attr("data-expectationsForeignWorkerRights",function(d){return d.expectationsForeignWorkerRights;})
+		.attr("data-expectationsContractDuration",function(d){return d.expectationsContractDuration;})
+		.attr("data-expectationsEarlyTerminationPenalties",function(d){return d.expectationsEarlyTerminationPenalties;})
+		.attr("data-expectationsRecruitmentFees",function(d){return d.expectationsRecruitmentFees;})
+		.attr("data-expectationsTransportationCosts",function(d){return d.expectationsTransportationCosts;})
+		.attr("data-expectationsTransportationPlan",function(d){return d.expectationsTransportationPlan;})
+		.attr("data-expectationsTransportationDocumentationPlan",function(d){return d.expectationsTransportationDocumentationPlan;})
+		.attr("data-expectationsTransportationDocumentationCosts",function(d){return d.expectationsTransportationDocumentationCosts;})
+		.attr("data-deductions",function(d){return d.deductions;})
+		.attr("data-lockedInRoom",function(d){return d.lockedInRoom;})
+		.attr("data-refusedOvertimePay",function(d){return d.refusedOvertimePay;})
+		.attr("data-limitedBreaks",function(d){return d.limitedBreaks;})
+		.attr("data-workWhenSick",function(d){return d.workWhenSick;})
+		.attr("data-dangerousWork",function(d){return d.dangerousWork;})
+		.attr("data-workedLonger",function(d){return d.workedLonger;})
+		.attr("data-restrictedMovement",function(d){return d.restrictedMovement;})
+		.attr("data-threatenNoPay",function(d){return d.threatenNoPay;})
+		.attr("data-threatenDismissal",function(d){return d.threatenDismissal;})
+		.attr("data-takenPassport",function(d){return d.takenPassport;})
+		.attr("data-threatenInjury",function(d){return d.threatenInjury;})
+		.attr("data-damagedBelongings",function(d){return d.damagedBelongings;})
+		.attr("data-slappedHitThrowSomething",function(d){return d.slappedHitThrowSomething;})
+		.attr("data-pushedKickedBeaten",function(d){return d.pushedKickedBeaten;})
+		.attr("data-tiedUpChoked",function(d){return d.tiedUpChoked;})
+		.attr("data-threatenWeaponUse",function(d){return d.threatenWeaponUse;})
+		.attr("data-burnYou",function(d){return d.burnYou;})
+		.attr("data-forcedSex",function(d){return d.forcedSex;})
+		.attr("data-forcedSubstances",function(d){return d.forcedSubstances;});
 	
 
 	attributeInitial()
@@ -411,12 +535,6 @@ function drawViz(network){
 	nonBrokers = d3version4.selectAll("[data-type=nonBroker]");
 	brokers = d3version4.selectAll("[data-type=broker]");
 	employers = d3version4.selectAll("[data-type=employer]");
-
-	// migrant attributes
-
-	// nonbroker attributes
-	// nonBrokers.attr("data-previous-broker",function(d){return "no"});
-
 
 	// ===================================================================================================	 
 
