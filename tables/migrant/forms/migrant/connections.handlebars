@@ -1,0 +1,104 @@
+<script type="text/javascript">
+// secondary handlebars	
+	console.log("attribute script");
+
+	// declare screen's actie attribute
+	var targetAttribute = "connections";
+	var networkConnections= [];
+
+
+	function attributeUpdater(clickedActor){
+			console.log("attributeUpdater")
+			console.log(clickedActor.data('id'));
+			
+			// initial selection
+			// if less than two nodes are selected, toggle this node's active state
+			if($('.nodes g.active').length < 2 || clickedActor.hasClass('active')){
+				
+                console.log('clicker');
+				var updated = "no";
+
+                clickedActor.toggleClass('active');
+                if(clickedActor.hasClass('active')){updated = "yes";}
+				console.log("updated: " + updated);
+
+			}			
+            
+            // odkData.updateRow("actor", {"connections":updated},clickedActor.data('id'), actorCtxt.success,actorCtxt.failure);
+			//TODO class toggles after db success
+			// update local temporary actorResultSet or regrab the fresh version
+	}
+
+	function attributeInitial(){	
+		for(var i = 0; i < actorResultSet.getCount(); i++){
+    		if(actorResultSet.getData(i,'connections') == "yes"){
+    			$('.nodes g[data-id="' + actorResultSet.getData(i,"_id") +'"]').addClass('active');
+    		}
+		}
+	}
+
+
+	$(document).ready(function(){
+		$('.networkConnection').on('click',function(){
+			if($('.nodes g.active').length == 2){
+				var source = "";
+				var target = "";
+
+                d3version4.selectAll('.nodes g.active').each(function(d,i){
+					if(i == 0){source = d.id;}
+					if(i == 1){target = d.id;}
+				})
+
+				$('.networkConnection').removeClass('active');
+				$(this).addClass('active');
+
+
+				// $('.tester').text(source + " and " + target + " are " + $(this).data('connection'))
+				// console.log(source + " and " + target + " are " + $(this).data('connection'))
+
+            	odkData.addRow("connection",{
+					"actorSource":source,
+					"actorTarget":target,
+					"migrantId":migrant,
+					"relationship":$(this).data('connection')},
+					Date.now().toString(), 
+					connectionCtxt.success,
+					connectionCtxt.failure
+				);
+
+			}else{
+				$('.tester').text('Select 2 actor for '+ $(this).data('connection'));
+			}
+		})
+	})
+
+	
+ var connectionCtxt= {
+     failure: function(error) {
+		console.log('error: '+error.message)
+	
+				$('.tester').text('could not store in database');
+	},  
+     success: function(result) { 
+
+		// dataset.links.push({
+		// 	"source": result.getData(0,'actorSource'),
+		// 	"target":result.getData(0,'actorTarget'),
+		// 	"value":"1"
+		// });
+/*
+             link.selectAll('g').data(result).enter().append("g")
+             .attr("data-source", function(d){ return d.getData(0,'actorSource');})
+             .attr("data-target", function(d){ return d.getData(0,'actorTarget');})
+             .append("line")
+             .attr("stroke-width", 1)
+*/
+         console.log('success: '+ result);
+	}
+};
+
+</script>
+
+<div class="tester">
+
+</div>

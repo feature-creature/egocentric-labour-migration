@@ -1,0 +1,33 @@
+<script type="text/javascript">
+// secondary handlebars	
+	console.log("attribute script");
+
+	// declare screen's actie attribute
+	var targetAttribute = "expectationsTransportationPlan";
+
+
+	function attributeUpdater(clickedActor){
+			console.log("attributeUpdater")
+			console.log(clickedActor.data('id'));
+			
+			// toggle this node's active state
+			clickedActor.toggleClass('active');
+
+			// update this node's attribute in the database
+			var updated = "no";
+			if(clickedActor.hasClass('active')){updated = "yes";}
+			console.log("updated: " + updated);
+			odkData.updateRow("actor", {"expectationsTransportationPlan":updated},clickedActor.data('id'), actorCtxt.success,actorCtxt.failure);
+			//TODO class toggles after db success
+			// update local temporary actorResultSet or regrab the fresh version
+	}
+
+	function attributeInitial(){	
+		for(var i = 0; i < actorResultSet.getCount(); i++){
+    		if(actorResultSet.getData(i,'expectationsTransportationPlan') == "yes"){
+    			$('.nodes g[data-id="' + actorResultSet.getData(i,"_id") +'"]').addClass('active');
+    		}
+		}
+	}
+
+</script>

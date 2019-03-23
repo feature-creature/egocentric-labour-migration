@@ -1,0 +1,589 @@
+<style>
+table.linked-table{
+	display:none;
+}
+div.odk-header-back-btn{
+	/*display:none;*/
+}
+
+.odk-next-btn{
+	/*float: right;*/
+
+}
+
+#languagePopup .btn-group-vertical>.btn, #optionsPopup .btn-group-vertical>.btn, #confirmExitPopup .btn-group-vertical>.btn{
+	width: 92%;
+}
+
+svg{
+	height:800px;
+	width:650px;
+	display:block;
+	/*border:solid orange 1px;*/
+	margin-top:25px;
+}
+
+/* ------------------------------------------------------- */
+/* ------------------- node attributes ------------------- */
+/* ------------------------------------------------------- */
+.nodes circle {
+    fill:white;
+    stroke: gray;
+    stroke-width: 1.5;
+}
+
+/* selection */
+.nodes g.active circle{
+    fill:pink;
+    stroke: gray;
+    stroke-width: 1.5;
+}
+
+/* ------------------- actor attributes ------------------- */
+.nodes g[data-previous-migration="yes"] circle{
+    fill:#ffd68a;
+    fill:#ffe5b5;
+    fill:gray;
+    fill:#ccc;
+}
+.nodes g[data-previous-migration="no"] circle{
+
+}
+
+/* ------------------- migrant attributes ------------------- */
+.nodes g[data-type="migrant"] circle{
+    fill:#ffb01d;
+    fill:#ffe5b5;
+}
+
+/* ------------------- broker attributes ------------------- */
+.nodes g[data-type="broker"] circle{
+    /*fill:#cfe8ff;*/
+}
+
+.nodes g[data-type="broker"] circle[data-broker="true"]{
+    stroke-width:7;
+    stroke-opacity: 0.85;
+    stroke-opacity: 0.25;
+}
+.nodes g[data-type="broker"][data-license="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.85;
+}
+.nodes g[data-type="broker"][data-license="no"] circle[data-broker="true"]{
+    stroke-opacity: 0.25;
+}
+.nodes g[data-type="broker"][data-license="unknown"] circle[data-broker="true"]{
+    stroke-opacity: 0.25;
+}
+
+/* ------------------- nonbroker attributes ------------------- */
+.nodes g[data-type="nonBroker"] circle{
+}
+.nodes g[data-type="nonBroker"][data-migrated-together="yes"] circle{
+}
+.nodes g[data-type="nonBroker"][data-migrated-together="no"] circle{
+}
+.nodes g[data-type="nonBroker"][data-previous-broker="yes"] circle{
+}
+.nodes g[data-type="nonBroker"][data-previous-broker="no"] circle{
+}
+
+/* ------------------- employer attributes ------------------- */
+.nodes g[data-type="employer"] circle[data-employer="true"]{
+    stroke-width:10;
+    stroke:navy;
+    stroke-opacity:0.6;
+}
+
+/* ------------------------------------------------------- */
+/* ------------------- link attributes ------------------- */
+/* ------------------------------------------------------- */
+.links line{
+	stroke:gray;
+}
+.links g[data-paidMigrantExpenses="yes"] line[data-payment="true"], .links g[data-loanedMigrantExpenses="yes"] line[data-payment="true"]{
+    fill:green;
+    stroke:green;
+    opacity:0.25;
+    stroke-width: 7;
+}
+.links g[data-chargedMigrantExpenses="yes"] line[data-payment="true"]{
+    fill:red;
+    stroke:red;
+    opacity:0.25;
+    stroke-width:7;
+}
+
+text {
+  	font-size: 12px;
+	stroke:gray;
+	fill:gray;
+	/*font-family: monospace;*/
+}
+
+button.timeStage{
+    border: #ccc solid 0.25em;
+    margin: 10px;
+    padding: 0.5em;
+    border-radius: 1em;
+    background-color: white;
+    width: 16%;
+    height: 4em;
+    color: gray;
+    font-size: 0.75em;
+}
+button.timeStage.active{
+    border: gray solid 0.25em;
+    background-color: #ffe5b5;
+}
+
+.links.timeStage.active{
+    background-color:#ccc;
+}
+.probe{color:gray;font-size:18px;margin:1em 0;}
+.addInstance{
+    background-color:#ffe5b5;
+    margin:1em 0;
+}
+</style>
+
+<svg width="650" height="800"></svg>
+
+<!-- <button type="button" class="timeStage active" name="decision">Decision</button>
+<button type="button" class="timeStage active" name="how">How</button>
+<button type="button" class="timeStage active" name="coordination">Coordination</button>
+<button type="button" class="timeStage active" name="transit">Transit</button>
+<button type="button" class="timeStage active" name="destination">Destination</button> -->
+
+<script>
+/* ------------------------------------------------------- */
+/* ------------------- node attributes ------------------- */
+
+console.log('viz');
+var actorResultSet = {};
+var connectionResultSet = {};
+var d3version3;
+var d3version4;
+
+var svg;
+var zoomLayer;
+var color;
+var simulation;
+
+var migrant = "Me";
+var dataset = {
+	nodes : [],
+	links : []
+};
+
+var migrantResult;
+
+var migrantCtxt = {
+    failure: function(error) {console.log('error: '+error.message)},  
+    success: function(result) {
+    	/*
+    	"nodes": [
+		    {"stages": "decision how destination transit coordination", "id": "migrant","previousMigration":"yes","type":"migrant"},
+		    {"stages": "decision how", "id": "broker 1","previousMigration":"no","previousBroker":"yes","license":"yes","type":"broker"},
+		    {"stages": "transit", "id": "broker 2","previousMigration":"yes","previousBroker":"yes","license":"no","type":"broker"},
+		    {"stages": "how", "id": "non broker 1","previousMigration":"no","migratedTogether":"yes","previousBroker":"no","type":"nonBroker"},
+		    {"stages": "transit", "id": "non broker 2","previousMigration":"yes","migratedTogether":"no","previousBroker":"no","type":"nonBroker"},
+		    {"stages": "coordination", "id": "non broker 3","previousMigration":"no","migratedTogether":"no","previousBroker":"yes","type":"nonBroker"},
+		    {"stages": "destination", "id": "employer","previousMigration":"no","type":"employer"}
+		],
+		*/
+
+        actorResultSet = result;
+        var numOfActors = actorResultSet.getCount();
+        console.log(numOfActors + " actors in " + [migrant] + "'s network");
+		
+		/* DATASET BUILDING NODES*/
+		// ===================================================================================================
+		//process migrant
+		dataset.nodes.push({
+			"id":migrant,
+			"name": migrant,
+			"type": "migrant",
+			"previousMigration":"yes",
+			"stages":"decision how destination transit coordination"
+		});
+
+
+		// process network actors
+		// ===================================================================================================
+        for(var i = 0; i < numOfActors; i++){
+        	var actorType = "nonBroker";
+        	if(actorResultSet.getData(i,'broker')== "yes"){actorType="broker"}
+        	if(actorResultSet.getData(i,'unnamedBroker')== "yes"){actorType="broker"}
+        	if(actorResultSet.getData(i,'employer') == "yes"){actorType="employer"}
+            
+    		// actor
+            dataset.nodes.push({
+            	"id":actorResultSet.getData(i,'_id'),
+				"name":actorResultSet.getData(i,'name'),
+            	"type":actorType,
+            	"broker":actorResultSet.getData(i,'broker'),
+            	"unnamedBroker":actorResultSet.getData(i,'unnamedBroker'),
+            	"license":actorResultSet.getData(i,'license'),
+            	"employer":actorResultSet.getData(i,'employer'),
+				"previousMigration":"yes",
+				"stages":"decision how destination transit coordination",
+            	"firstSuggestion":actorResultSet.getData(i,'firstSuggestion'),
+				"neededPermission":actorResultSet.getData(i,'neededPermission'),
+				"wantedBlessing":actorResultSet.getData(i,'wantedBlessing'),
+				"chargedMigrantExpenses":actorResultSet.getData(i,'chargedMigrantExpenses'),
+				"paidMigrantExpenses":actorResultSet.getData(i,'paidMigrantExpenses'),
+				"loanedMigrantExpenses":actorResultSet.getData(i,'loanedMigrantExpenses'),
+				"finalDecision":actorResultSet.getData(i,'finalDecision'),
+				"encouragement":actorResultSet.getData(i,'encouragement'),
+				"discouragement":actorResultSet.getData(i,'discouragement'),
+				"migrationModeller":actorResultSet.getData(i,'migrationModeller'),
+				"refuseReaction":actorResultSet.getData(i,'refuseReaction'),
+				"providedGeneralInformation":actorResultSet.getData(i,'generalInformation'),
+				"recruiterArrangements":actorResultSet.getData(i,'recruiterArrangements'),
+				"nonbrokerArrangements":actorResultSet.getData(i,'nonbrokerArrangements'),
+				"introducedBrokers":actorResultSet.getData(i,'introducedBrokers'),
+				"sharedHonestFeelings":actorResultSet.getData(i,'honestFeelings'),
+				"coMigration":actorResultSet.getData(i,'coMigration'),
+				"inTransitHelp":actorResultSet.getData(i,'inTransitHelp'),
+				"unnamedImportantPlanner":actorResultSet.getData(i,'unnamedImportantPlanners'),
+				"trustAgain":actorResultSet.getData(i,'trustAgain'),
+				"mostValuableHelp":actorResultSet.getData(i,'mostValuableHelp'),
+				"causedProblems":actorResultSet.getData(i,'knowinglyOrUnknowinglyCauseProblems'),
+				"alsoAttendedTrainings":actorResultSet.getData(i,'alsoAttendedTrainings'),
+				"arrangedMigration":actorResultSet.getData(i,"arrangedMigration"),
+				"arrangedDestination":actorResultSet.getData(i,"arrangedDestination"),
+				"arrangedWork":actorResultSet.getData(i,"arrangedWork"),
+				"arrangedTravel":actorResultSet.getData(i,"arrangedTravel"),
+				"arrangedTransportation":actorResultSet.getData(i,"arrangedTransportation"),
+				"arrangedAccommodation":actorResultSet.getData(i,"arrangedAccommodation"),
+				"workedForRecruitmentAgency":actorResultSet.getData(i,"workedForRecruitmentAgency"),
+				"helpedOtherMigrants":actorResultSet.getData(i,"helpedOtherMigrants"),
+				"jusong":actorResultSet.getData(i,"jusong"),
+				"predepartureDiscussionPersonInThailand":actorResultSet.getData(i,"predepartureDiscussionPersonInThailand")
+            });
+
+        	// add link migrant <-> actor
+            dataset.links.push({"source": migrant, "target":actorResultSet.getData(i,'_id'),"paidMigrantExpenses":actorResultSet.getData(i,'paidMigrantExpenses'),"loanedMigrantExpenses":actorResultSet.getData(i,'loanedMigrantExpenses'),"chargedMigrantExpenses":actorResultSet.getData(i,'chargedMigrantExpenses'),"value":"1"});
+        }
+
+
+        // process network connections
+        odkData.arbitraryQuery('connection','select * from connection where migrantId = ?',[migrant],null,null,connectionsCtxt.success,connectionsCtxt.failure);
+    }
+};
+
+var connectionsCtxt = {
+    failure: function(error) {console.log('error: '+error.message)},  
+    success: function(result) {
+
+		
+		// ===================================================================================================
+
+		/*
+		  "links": [
+		    {"source": "migrant", "target": "broker 1", "value": 1,"payment":"fromMigrant"},
+		    {"source": "migrant", "target": "broker 2", "value": 1,"payment":"fromMigrant"},
+		    {"source": "migrant", "target": "non broker 1", "value": 1,"payment":"toMigrant"},
+		    {"source": "non broker 1", "target": "non broker 2", "value": 1,"payment":""},
+		    {"source": "broker 1", "target": "non broker 2", "value": 1,"payment":""},
+		    {"source": "migrant", "target": "non broker 2", "value": 1,"payment":""},
+		    {"source": "migrant", "target": "non broker 3", "value": 1,"payment":"toMigrant"},
+		    {"source": "migrant", "target": "employer", "value": 1,"payment":""},
+		    {"source": "broker 1", "target": "employer", "value": 1,"payment":""},
+		    {"source": "broker 1", "target": "broker 2", "value": 1,"payment":""},
+		    {"source": "broker 1", "target": "non broker 2", "value": 1,"payment":""},
+		    {"source": "broker 2", "target": "employer", "value": 1,"payment":""},
+		    {"source": "non broker 2", "target": "broker 2", "value": 1,"payment":""}
+		  ]
+		*/
+
+    	// DATASET BUILDING ACTOR TO ACTOR CONNECTIONS
+        connectionResultSet = result;
+        var numOfConnections = connectionResultSet.getCount();
+        console.log(numOfConnections + " connections in " + [migrant] + "'s network");
+
+        for(var i = 0; i < numOfConnections; i++){
+            var sid = connectionResultSet.getData(i,'actorSource');
+            var tid  = connectionResultSet.getData(i,'actorTarget');
+            var payment = connectionResultSet.getData(i,'toMigra');
+
+            dataset.links.push({"source": sid, "target":tid,"value":"1"});
+        }
+
+		// ===================================================================================================
+
+
+		// START VIZ
+
+		svg = d3version4.select("svg"),
+     	width = +svg.attr("width"),
+     	height = +svg.attr("height");
+ 		zoomLayer  = svg.append("g");
+ 
+		color = d3version4.scaleOrdinal(d3version4.schemeCategory20);
+
+        simulation = d3version4.forceSimulation()
+            .force("link", d3version4.forceLink().id(function(d) { return d.id; }))
+            .force("charge", d3version4.forceManyBody().strength(-3500).distanceMax(3500).distanceMin(10))
+            .force("center", d3version4.forceCenter(width / 2, height / 2));
+
+		// ===================================================================================================
+
+		// var timeStages = d3version4.selectAll(".timeStage").on("click",function(){
+			// node.attr('opacity',1);
+			// d3version4.selectAll('.links g').attr('opacity',1);
+			// // d3version4.selectAll('.timeStage').classed('active',false);
+			// d3version4.select(this).classed('active',true);
+			// if(d3version4.select(this).attr("name")!= "all"){
+			// 	var inactives = d3version4.selectAll(".nodes g:not([data-stages*="+d3version4.select(this).attr("name")+"])").attr('opacity',0.1);
+			// 	//d3version4.selectAll(".links g").attr('opacity',0.1);
+			// }
+		// })
+
+		// ===================================================================================================
+
+		var link = zoomLayer.append("g")
+			.attr("class", "links")
+			.selectAll("g")
+			.data(dataset.links)
+			.enter().append("g")
+			.attr("data-source", function(d) { return d.source;})
+			.attr("data-target", function(d) { return d.target;})
+			.attr("data-paidMigrantExpenses", function(d) { return d.paidMigrantExpenses;})
+			.attr("data-chargedMigrantExpenses", function(d) { return d.chargedMigrantExpenses;})
+			.attr("data-loanedMigrantExpenses", function(d) { return d.loanedMigrantExpenses;})
+			.append("line")
+			.attr("stroke-width", function(d) { return Math.sqrt(d.value); })
+
+		var paymentsToMigrants = d3version4.selectAll("[data-paidMigrantExpenses=yes],[data-loanedMigrantExpenses=yes]");
+		var paymentsFromMigrants = d3version4.selectAll("[data-chargedMigrantExpenses=yes]");
+		var payments = d3version4.selectAll("[data-paidMigrantExpenses=yes],[data-chargedMigrantExpenses=yes],[data-loanedMigrantExpenses=yes]");
+
+		var payment = payments.append("line")
+			.attr('data-payment','true');
+
+		// ===================================================================================================
+		
+		var node = zoomLayer.append("g")
+			.attr("class", "nodes")
+			.selectAll("g")
+			.data(dataset.nodes)
+			.enter().append("g")
+			.attr("data-id", function(d) { return d.id; })
+			.attr("data-broker", function(d) { return d.broker; })
+			.attr("data-unnamedBroker", function(d) { return d.unnamedBroker; })
+			.attr("data-license", function(d) { return d.license; })
+			.attr("data-employer", function(d) { return d.employer; })
+			.attr("data-name", function(d) {return d.name})
+			.attr("data-type", function(d) { return d.type;})
+			.attr("data-stages", function(d) { return d.stages;})
+			.attr("data-trustAgain", function(d) { return d.trustAgain;})
+			.attr("data-coMigration", function(d) { return d.coMigration;})
+			.attr("data-inTransitHelp", function(d) { return d.inTransitHelp;})
+			.attr("data-finalDecision", function(d) { return d.finalDecision;})
+			.attr("data-encouragement", function(d) { return d.encouragement;})
+			.attr("data-wantedBlessing", function(d) {return d.wantedBlessing;})
+			.attr("data-wantedBlessing", function(d) { return d.wantedBlessing;})
+			.attr("data-discouragement", function(d) { return d.discouragement;})
+			.attr("data-refuseReaction", function(d) { return d.refuseReaction;})
+			.attr("data-firstSuggestion", function(d) { return d.firstSuggestion;})
+			.attr("data-causedProblems", function(d) { return d.causedProblems;})
+			.attr("data-previousMigration",function(d) {return d.previousMigration})
+			.attr("data-mostValuableHelp", function(d) { return d.mostValuableHelp;})
+			.attr("data-neededPermission", function(d) { return d.neededPermission;})
+			.attr("data-introducedBrokers", function(d) { return d.introducedBrokers;})
+			.attr("data-migrationModeller", function(d) { return d.migrationModeller;})
+			.attr("data-paidMigrantExpenses", function(d) {return d.paidMigrantExpenses;})
+			.attr("data-sharedHonestFeelings", function(d) { return d.sharedHonestFeelings;})
+			.attr("data-recruiterArrangements", function(d) { return d.recruiterArrangements;})
+			.attr("data-nonbrokerArrangements", function(d) { return d.nonbrokerArrangements;})
+			.attr("data-alsoAttendedTrainings", function(d) { return d.alsoAttendedTrainings;})
+			.attr("data-chargedMigrantExpenses", function(d) {return d.chargedMigrantExpenses;})
+			.attr("data-unnamedImportantPlanner", function(d) { return d.unnamedImportantPlanner;})
+			.attr("data-providedGeneralInformation", function(d) { return d.providedGeneralInformation;})
+			.attr("arrangedMigration", function(d){return d.arrangedMigration;})
+			.attr("arrangedDestination", function(d){return d.arrangedDestination;})
+			.attr("arrangedWork", function(d){return d.arrangedWork;})
+			.attr("arrangedTravel", function(d){return d.arrangedTravel;})
+			.attr("arrangedTransportation", function(d){return d.arrangedTransportation;})
+			.attr("arrangedAccommodation", function(d){return d.arrangedAccommodation;})
+			.attr("workedForRecruitmentAgency", function(d){return d.workedForRecruitmentAgency;})
+			.attr("helpedOtherMigrants", function(d){return d.helpedOtherMigrants;})
+			.attr("jusong", function(d){return d.jusong;})
+			.attr("predepartureDiscussionPersonInThailand", function(d){return d.predepartureDiscussionPersonInThailand;});
+
+		
+
+		// if(typeof attributeInitial ==! "undefined"){
+		// }
+			attributeInitial()
+
+
+		var migrants = d3version4.selectAll("[data-type=migrant]");
+		var nonBrokers = d3version4.selectAll("[data-type=nonBroker]");
+		var brokers = d3version4.selectAll("[data-type=broker]");
+		var employers = d3version4.selectAll("[data-type=employer]");
+
+		// migrant attributes
+
+		// nonbroker attributes
+		nonBrokers.attr("data-previous-broker",function(d){return "no"});
+
+		// broker attributes
+		// brokers.attr("data-license",function(d) {return "yes";});
+
+		// employer attributes
+
+
+		// ===================================================================================================	 
+
+		var circles = node.append("circle")
+			.attr("r", 15)
+			.call(d3version4.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended));
+
+		var brokeRings = brokers.append("circle")
+			.attr('r',23)
+			.attr('data-broker','true')
+			.attr('fill-opacity',0)
+			.call(d3version4.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended));
+
+		var employerRings = employers.append("circle")
+			.attr('r',23)
+			.attr('data-employer','true')
+			.attr('fill-opacity',0)
+			.call(d3version4.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended));
+
+		var lables = node.append("text")
+			.text(function(d) {
+				return d.name;
+			})
+			.attr('x', 25)
+			.attr('y', 20);
+
+		node.append("title")
+			.text(function(d){
+				return d.name;
+			});
+
+
+		// ===================================================================================================
+
+		simulation
+			.nodes(dataset.nodes)
+			.on("tick", ticked);
+
+		simulation.force("link")
+			.links(dataset.links);
+
+		function ticked() {
+			link
+				.attr("x1", function(d) { return d.source.x; })
+				.attr("y1", function(d) { return d.source.y; })
+				.attr("x2", function(d) { return d.target.x; })
+				.attr("y2", function(d) { return d.target.y; });
+			payment 
+				.attr("x1", function(d) { return (d.target.x+d.source.x)/2; })
+				.attr("y1", function(d) { return (d.target.y+d.source.y)/2; })
+				.attr("x2", function(d) { return d.source.x; })
+				.attr("y2", function(d) { return d.source.y; })
+			employerRings
+				.attr("x", -25)
+				.attr("y", -25)
+				.attr("height",50)
+				.attr("width",50);
+			node
+				.attr("transform", function(d) {
+				  return "translate(" + d.x + "," + d.y + ")";
+				});
+		}
+
+		function dragstarted(d) {
+		  if (!d3version4.event.active) simulation.alphaTarget(0.3).restart();
+		  d.fx = d.x;
+		  d.fy = d.y;
+		}
+
+		function dragged(d) {
+		  d.fx = d3version4.event.x;
+		  d.fy = d3version4.event.y;
+		}
+
+		function dragended(d) {
+		  if (!d3version4.event.active) simulation.alphaTarget(0);
+		  d.fx = null;
+		  d.fy = null;
+		}
+
+		var zoomed = function() {
+		  zoomLayer.attr("transform", d3version4.event.transform);
+		}
+
+		svg.call(d3version4.zoom()
+			.scaleExtent([1 / 2, 12])
+			.on("zoom", zoomed));
+
+
+		// CREATE CONNECTIONS
+		$(".nodes g[data-type=nonBroker],.nodes g[data-type=broker],.nodes g[data-type=employer]").on("click",function(){
+				
+			if($(.nodes g.active).length() < 2){
+				clickedActor.toggleClass('active');
+			}else{
+				clickedActor.removeClass('active');
+			}
+
+
+			// other buttons and conditions are met
+			// sture relationship
+			odkData.updateRow("connection", {"actorSource": $(.nodes g.active)[0].data(id),"relationship": $(.relationship.active).data(relationshipType),"actorTarget": $(.nodes g.active)[1].data(id)},clickedActor.data('id'), actorCtxt.success,actorCtxt.failure);		
+			// on success clear active states and maybe reload the apge
+
+		
+
+		});
+	}
+};
+
+
+
+
+
+d3version3 = d3
+window.d3 = null
+
+// load database and d3 first
+require(['database',"{{expandFormDirRelativeUrlPath 'd3.js'}}"], function(database,d3){
+ 	// Defering in hopes that the template fully loads before the script runs.
+ 	_.defer(function() {   
+ 		d3version4 = d3
+	    window.d3 = null
+	    // test it worked
+	    console.log('v4', d3version4.version)
+
+        // globalize migrant data
+        migrantResult = database;
+		migrant = database.getDataValue('migrantId');
+
+		// request actor data associated with the migrant
+        odkData.arbitraryQuery('actor','select * from actor where migrantId = ?',[migrant],null,null,migrantCtxt.success,migrantCtxt.failure);
+	})
+})
+
+
+// updating actor data - success returns all rows
+var actorCtxt= {
+    failure: function(error) {console.log('error: '+error.message)},  
+    success: function(result) { console.log('success: '+ result)
+}};
+
+</script>
