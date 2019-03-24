@@ -16,9 +16,9 @@ div.odk-header-back-btn{
 }
 
 svg{
-	margin-top:25px;
+	margin-top:-25px;
 	display:block;
-	height:800px;
+	height:650px;
 	width:650px;
 }
 
@@ -167,9 +167,25 @@ button.timeStage.active{
     background-color:#ffe5b5;
     margin:1em 0;
 }
+ button.networkConnection{
+     border: #ccc solid 0.25em;
+     margin: 10px;
+     padding: 0.5em;
+     border-radius: 1em;
+     background-color: white;
+     min-width: 15em;
+     height: 5em;
+     color: gray;
+     font-size: 0.75em;
+ }
+ button.networkConnection.active{
+     border: gray solid 0.25em;
+     background-color: #ffe5b5;
+ }
+
 </style>
 
-<svg width="650" height="800"></svg>
+<svg width="650" height="650"></svg>
 
 <!-- relationships	acquintance	Acquaintance	အသိအကျွမ်း -->
 <button type="button" class="networkConnection" data-connection="acquintances" name="decision">Acquaintances</button>
