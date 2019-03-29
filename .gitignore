@@ -1,0 +1,5 @@
+
+tables/*/forms/*/formDef.json
+tables/*/tableSpecificDefinitions.js
+tables/*/definition.csv
+tables/*/properties.csv
