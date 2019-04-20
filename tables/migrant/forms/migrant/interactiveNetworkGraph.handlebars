@@ -50,56 +50,77 @@ svg{
 .nodes g[data-type="nonBroker"][data-previous-broker="no"] circle{}
 
 
-/* ------------------- broker general ------------------- */
-.nodes g[data-type="broker"] circle{}
 
+/*
+    general broker/agent - light
+    your broker/agent - light
+    your informal broker/agent - light
+    recruitment agency employee - dark
+    licesned recruitment agency employee - not sure
+
+    your general employers - light blue
+    your first employer - dark blue
+
+*/
+
+/* ------------------- broker general ------------------- */
+.nodes g[data-type="employer"] circle[data-broker="true"],
 .nodes g[data-type="broker"] circle[data-broker="true"]{
-    stroke-width:7;
-    stroke-opacity: 0.25;
+    stroke-width:0;
 }
 
-/* ------------------- broker - light broker ring ------------------- */
-.nodes g[data-type="broker"][data-agentForMigrant="yes"] circle[data-broker="true"],
-.nodes g[data-type="broker"][data-brokerForMigrant="yes"] circle[data-broker="true"],
+/* ------------------- recruiter general ------------------- */
+.nodes g[data-type="employer"][data-previousRecruiter="yes"] circle[data-broker="true"],
 .nodes g[data-type="broker"][data-previousRecruiter="yes"] circle[data-broker="true"]{
     stroke-opacity: 0.25;
-}
-
-/* ------------------- broker - dark broker ring ------------------- */
-.nodes g[data-type="broker"][data-recruiterAgentForMigrant="yes"] circle[data-broker="true"]{
-    stroke-opacity: 0.85;
-}
-
-/* ------------------- employer - light broker ring ------------------- */
-.nodes g[data-type="employer"][data-agentForMigrant="yes"] circle[data-broker="true"],
-.nodes g[data-type="employer"][data-brokerForMigrant="yes"] circle[data-broker="true"],
-.nodes g[data-type="employer"][data-previousRecruiter="yes"] circle[data-broker="true"]{
-    stroke-opacity: 0.25;
     stroke-width:7;
 }
 
-/* ------------------- employer - dark broker ring ------------------- */
-.nodes g[data-type="employer"][data-recruiterAgentForMigrant="yes"] circle[data-broker="true"]{
+/* ------------------- broker for migrant ------------------- */
+.nodes g[data-type="employer"][data-brokerForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-brokerForMigrant="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.25;
     stroke-opacity: 0.85;
+    stroke-width:7;
 }
 
-/* ------------------- employer - employer ring ------------------- */
+/* ------------------- agent for migrant ------------------- */
+.nodes g[data-type="employer"][data-agentForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-agentForMigrant="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.25;
+    stroke-opacity: 0.85;
+    stroke-width:7;
+}
+
+/* ------------------- recruiter agent for migrant ------------------- */
+.nodes g[data-type="employer"][data-recruiterAgentForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-recruiterAgentForMigrant="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.85;
+    stroke-opacity: 1;
+    stroke-width:7;
+}
+
+/* ------------------- liscened recruiter agent for migrant ------------------- */
+
+/* ------------------- employer general ------------------- */
+.nodes g[data-type="employer"] circle[data-employer="true"],
 .nodes g[data-employer="true"] circle[data-employer="true"],
-.nodes g[data-firstEmployer="true"] circle[data-employer="true"],
-.nodes g[data-type="employer"] circle[data-employer="true"]{
+.nodes g[data-firstEmployer="true"] circle[data-employer="true"]{
     stroke-opacity:0.6;
     stroke-width:10;
     stroke:navy;
 }
 
+/* ------------------- general employer for migrant ------------------- */
 .nodes g[data-type="employer"][data-employer="yes"] circle[data-employer="true"]{
     stroke-opacity: 0.25;
 }
+/* ------------------- first employer for migrant ------------------- */
 .nodes g[data-type="employer"][data-firstEmployer="yes"] circle[data-employer="true"]{
     stroke-opacity: 0.85;
 }
 
-/* ------------------- migrant general ------------------- */
+/* ------------------- migrant ------------------- */
 .nodes g[data-type="migrant"] circle{
     fill:#ffe5b5;
 }
@@ -115,7 +136,14 @@ svg{
 }
 
 /* ------------------- payment - positive ------------------- */
-.links g[data-paidMigrantExpenses="yes"] line[data-payment="true"][data-paidMigrantExpenses="yes"], .links g[data-loanedMigrantExpenses="yes"] line[data-payment="true"][data-loanedMigrantExpenses="yes"]{
+/* make paid dark green and loan light green  */
+.links g[data-paidMigrantExpenses="yes"] line[data-payment="true"][data-paidMigrantExpenses="yes"]{
+    fill:green;
+    stroke:green;
+    opacity:0.5;
+    stroke-width: 7;
+}
+.links g[data-loanedMigrantExpenses="yes"] line[data-payment="true"][data-loanedMigrantExpenses="yes"]{
     fill:green;
     stroke:green;
     opacity:0.25;
@@ -123,14 +151,21 @@ svg{
 }
 
 /* ------------------- payment - negative ------------------- */
-.links g[data-chargedMigrantExpenses="yes"] line[data-payment="true"][data-chargedMigrantExpenses="yes"], .links g[data-migrantDebt="yes"] line[data-payment="true"][data-migrantDebt="yes"]{
+/* debt dark red and charged light red  */
+
+.links g[data-migrantDebt="yes"] line[data-payment="true"][data-migrantDebt="yes"]{
+    fill:red;
+    stroke:red;
+    opacity:0.5;
+    stroke-width:7;
+}
+
+.links g[data-chargedMigrantExpenses="yes"] line[data-payment="true"][data-chargedMigrantExpenses="yes"]{
     fill:red;
     stroke:red;
     opacity:0.25;
     stroke-width:7;
 }
-
-
 /* ------------------------------------------------------- */
 /* ------------------- general styles ------------------- */
 /* ------------------------------------------------------- */
