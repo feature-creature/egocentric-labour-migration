@@ -75,6 +75,9 @@
 
 			}else{
 				$('.tester').text('Select 2 actor for '+ $(this).data('connection'));
+         	    setTimeout(function() {
+				    $('.tester').text('');
+			    }, 1000);
 			}
 		})
 	})
@@ -83,24 +86,16 @@
  var connectionCtxt= {
      failure: function(error) {
 		console.log('error: '+error.message)
-	
-				$('.tester').text('could not store in database');
+		$('.tester').text('could not store in database');
+        setTimeout(function() {			    
+            $('.tester').text('');
+		}, 3000);
 	},  
      success: function(result) { 
-
-		// dataset.links.push({
-		// 	"source": result.getData(0,'actorSource'),
-		// 	"target":result.getData(0,'actorTarget'),
-		// 	"value":"1"
-		// });
-/*
-             link.selectAll('g').data(result).enter().append("g")
-             .attr("data-source", function(d){ return d.getData(0,'actorSource');})
-             .attr("data-target", function(d){ return d.getData(0,'actorTarget');})
-             .append("line")
-             .attr("stroke-width", 1)
-*/
-         console.log('success: '+ result);
+         	console.log('success: '+ result);
+         	setTimeout(function() {
+         		location.reload();
+			}, 750);
 	}
 };
 
