@@ -1,1 +1,2 @@
-# Labour Migration Egocentric Network Survey
+# Research Tool for Labour Migration
+![](example-labour-migration.jpg)
