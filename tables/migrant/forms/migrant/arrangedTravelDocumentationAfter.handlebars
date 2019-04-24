@@ -3,7 +3,7 @@
 	console.log("attribute script");
 
 	// declare screen's actie attribute
-	var targetAttribute = "arrangedTravelDocumentation";
+	var targetAttribute = "arrangedTravelDocumentationAfter";
 
 
 	function attributeUpdater(clickedActor){
@@ -17,14 +17,14 @@
 			var updated = "no";
 			if(clickedActor.hasClass('active')){updated = "yes";}
 			console.log("updated: " + updated);
-			odkData.updateRow("actor", {"arrangedTravelDocumentation":updated},clickedActor.data('id'), actorCtxt.success,actorCtxt.failure);
+			odkData.updateRow("actor", {"arrangedTravelDocumentationAfter":updated},clickedActor.data('id'), actorCtxt.success,actorCtxt.failure);
 			//TODO class toggles after db success
 			// update local temporary actorResultSet or regrab the fresh version
 	}
 
 	function attributeInitial(){	
 		for(var i = 0; i < actorResultSet.getCount(); i++){
-    		if(actorResultSet.getData(i,'arrangedTravelDocumentation') == "yes"){
+    		if(actorResultSet.getData(i,'arrangedTravelDocumentationAfter') == "yes"){
     			$('.nodes g[data-id="' + actorResultSet.getData(i,"_id") +'"]').addClass('active');
     		}
 		}
