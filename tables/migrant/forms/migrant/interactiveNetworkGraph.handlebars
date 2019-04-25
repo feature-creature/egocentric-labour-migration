@@ -51,18 +51,6 @@ svg{
 
 
 
-/*
-    general broker/agent - light
-    your broker/agent - light
-    your informal broker/agent - light
-    recruitment agency employee - dark
-    licesned recruitment agency employee - not sure
-
-    your general employers - light blue
-    your first employer - dark blue
-
-*/
-
 /* ------------------- broker general ------------------- */
 .nodes g[data-type="employer"] circle[data-broker="true"],
 .nodes g[data-type="broker"] circle[data-broker="true"]{
@@ -76,10 +64,25 @@ svg{
     stroke-width:7;
 }
 
+/* ------------------- smuggler or transporter general ------------------- */
+.nodes g[data-type="employer"][data-previousSmugglerOrTransporter="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-previousSmugglerOrTransporter="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.25;
+    stroke-width:7;
+}
+
 /* ------------------- broker for migrant ------------------- */
 .nodes g[data-type="employer"][data-brokerForMigrant="yes"] circle[data-broker="true"],
-.nodes g[data-type="broker"][data-brokerForMigrant="yes"] circle[data-broker="true"]{
-    stroke-opacity: 0.25;
+.nodes g[data-type="employer"][data-smugglerOrTransporterForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-brokerForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-smugglerOrTransporterForMigrant="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.85;
+    stroke-width:7;
+}
+
+/* ------------------- smuggler or transporter for migrant ------------------- */
+.nodes g[data-type="employer"][data-smugglerOrTransporterForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-smugglerOrTransporterForMigrant="yes"] circle[data-broker="true"]{
     stroke-opacity: 0.85;
     stroke-width:7;
 }
@@ -87,7 +90,6 @@ svg{
 /* ------------------- agent for migrant ------------------- */
 .nodes g[data-type="employer"][data-agentForMigrant="yes"] circle[data-broker="true"],
 .nodes g[data-type="broker"][data-agentForMigrant="yes"] circle[data-broker="true"]{
-    stroke-opacity: 0.25;
     stroke-opacity: 0.85;
     stroke-width:7;
 }
@@ -283,6 +285,8 @@ function addActorsToNetwork(actors,network){
 			|| actors.getData(i,"brokerForMigrant") == "yes"
 			|| actors.getData(i,"agentForMigrant") == "yes"
 			|| actors.getData(i,"recruiterAgentForMigrant") == "yes"
+			|| actors.getData(i,"previousSmugglerOrTransporter") == "yes"
+			|| actors.getData(i,"smugglerOrTransporterForMigrant") == "yes"
         ){
         	actorType="broker"
     	}
@@ -298,8 +302,8 @@ function addActorsToNetwork(actors,network){
 			"loanedMigrantExpenses":actors.getData(i,"loanedMigrantExpenses"),
 			"migrantDebt":actors.getData(i,"migrantDebt"),
 
-	
-			"previousRecruiter":actors.getData(i,"previousRecruiter"),
+
+            "previousRecruiter":actors.getData(i,"previousRecruiter"),
 			"brokerForMigrant":actors.getData(i,"brokerForMigrant"),
 
 			"agentForMigrant":actors.getData(i,"agentForMigrant"),
@@ -395,7 +399,10 @@ function addActorsToNetwork(actors,network){
 			"threatenWeaponUse":actors.getData(i,"threatenWeaponUse"),
 			"burnYou":actors.getData(i,"burnYou"),
 			"forcedSex":actors.getData(i,"forcedSex"),
-			"forcedSubstances":actors.getData(i,"forcedSubstances")
+			"forcedSubstances":actors.getData(i,"forcedSubstances"),
+
+			"previousSmugglerOrTransporter":actors.getData(i,"previousSmugglerOrTransporter"),
+			"smugglerOrTransporterForMigrant":actors.getData(i,"smugglerOrTransporterForMigrant")
 
 
         });
@@ -474,6 +481,8 @@ function drawViz(network){
 		.attr("data-brokerForMigrant",function(d){return d.brokerForMigrant;})
 		.attr("data-agentForMigrant",function(d){return d.agentForMigrant;})
 		.attr("data-recruiterAgentForMigrant",function(d){return d.recruiterAgentForMigrant;})
+		.attr("data-previousSmugglerOrTransporter",function(d){return d.previousSmugglerOrTransporter;})
+		.attr("data-smugglerOrTransporterForMigrant",function(d){return d.smugglerOrTransporterForMigrant;})
 		.attr("data-firstEmployer",function(d){return d.firstEmployer;})
 		.attr("data-employer",function(d){return d.employer;})			
 		.attr("data-id",function(d){return d.id;})
