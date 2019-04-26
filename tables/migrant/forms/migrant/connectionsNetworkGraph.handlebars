@@ -88,6 +88,14 @@ svg{
 }
 
 
+/* ------------------- trafficker for migrant ------------------- */
+.nodes g[data-type="employer"][data-traffickerForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-traffickerForMigrant="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.85;
+    stroke-width:7;
+}
+
+
 /* ------------------- agent for migrant ------------------- */
 .nodes g[data-type="employer"][data-agentForMigrant="yes"] circle[data-broker="true"],
 .nodes g[data-type="broker"][data-agentForMigrant="yes"] circle[data-broker="true"]{
@@ -341,6 +349,7 @@ function addActorsToNetwork(actors,network){
 
 			"agentForMigrant":actors.getData(i,"agentForMigrant"),
 			"recruiterAgentForMigrant":actors.getData(i,"recruiterAgentForMigrant"),
+			"traffickerForMigrant":actors.getData(i,"traffickerForMigrant"),
 			
 
 			"firstEmployer":actors.getData(i,"firstEmployer"),
@@ -514,6 +523,7 @@ function drawViz(network){
 		.attr("data-brokerForMigrant",function(d){return d.brokerForMigrant;})
 		.attr("data-agentForMigrant",function(d){return d.agentForMigrant;})
 		.attr("data-recruiterAgentForMigrant",function(d){return d.recruiterAgentForMigrant;})
+		.attr("data-traffickerForMigrant",function(d){return d.traffickerForMigrant;})
         .attr("data-previousSmugglerOrTransporter",function(d){return d.previousSmugglerOrTransporter;})
         .attr("data-smugglerOrTransporterForMigrant",function(d){return d.smugglerOrTransporterForMigrant;})
 		.attr("data-firstEmployer",function(d){return d.firstEmployer;})
