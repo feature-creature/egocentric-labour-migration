@@ -73,9 +73,7 @@ svg{
 
 /* ------------------- broker for migrant ------------------- */
 .nodes g[data-type="employer"][data-brokerForMigrant="yes"] circle[data-broker="true"],
-.nodes g[data-type="employer"][data-smugglerOrTransporterForMigrant="yes"] circle[data-broker="true"],
-.nodes g[data-type="broker"][data-brokerForMigrant="yes"] circle[data-broker="true"],
-.nodes g[data-type="broker"][data-smugglerOrTransporterForMigrant="yes"] circle[data-broker="true"]{
+.nodes g[data-type="broker"][data-brokerForMigrant="yes"] circle[data-broker="true"]{
     stroke-opacity: 0.85;
     stroke-width:7;
 }
@@ -90,6 +88,13 @@ svg{
 /* ------------------- trafficker for migrant ------------------- */
 .nodes g[data-type="employer"][data-traffickerForMigrant="yes"] circle[data-broker="true"],
 .nodes g[data-type="broker"][data-traffickerForMigrant="yes"] circle[data-broker="true"]{
+    stroke-opacity: 0.85;
+    stroke-width:7;
+}
+
+/* ------------------- kozelay for migrant ------------------- */
+.nodes g[data-type="employer"][data-kozelayForMigrant="yes"] circle[data-broker="true"],
+.nodes g[data-type="broker"][data-kozelayForMigrant="yes"] circle[data-broker="true"]{
     stroke-opacity: 0.85;
     stroke-width:7;
 }
@@ -296,6 +301,7 @@ function addActorsToNetwork(actors,network){
 			|| actors.getData(i,"previousSmugglerOrTransporter") == "yes"
 			|| actors.getData(i,"smugglerOrTransporterForMigrant") == "yes"
 			|| actors.getData(i,"traffickerForMigrant") == "yes"
+			|| actors.getData(i,"kozelayForMigrant") == "yes"
         ){
         	actorType="broker"
     	}
@@ -318,6 +324,7 @@ function addActorsToNetwork(actors,network){
 			"agentForMigrant":actors.getData(i,"agentForMigrant"),
 			"recruiterAgentForMigrant":actors.getData(i,"recruiterAgentForMigrant"),
 			"traffickerForMigrant":actors.getData(i,"traffickerForMigrant"),
+			"kozelayForMigrant":actors.getData(i,"kozelayForMigrant"),
 			
 
 			"firstEmployer":actors.getData(i,"firstEmployer"),
@@ -492,6 +499,7 @@ function drawViz(network){
 		.attr("data-agentForMigrant",function(d){return d.agentForMigrant;})
 		.attr("data-recruiterAgentForMigrant",function(d){return d.recruiterAgentForMigrant;})
 		.attr("data-traffickerForMigrant",function(d){return d.traffickerForMigrant;})
+		.attr("data-kozelayForMigrant",function(d){return d.kozelayForMigrant;})
 		.attr("data-previousSmugglerOrTransporter",function(d){return d.previousSmugglerOrTransporter;})
 		.attr("data-smugglerOrTransporterForMigrant",function(d){return d.smugglerOrTransporterForMigrant;})
 		.attr("data-firstEmployer",function(d){return d.firstEmployer;})
