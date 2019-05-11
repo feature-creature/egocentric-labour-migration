@@ -253,6 +253,7 @@ button.timeStage.active{
 <!-- relationships	family	Family	မိသားစု -->
 <button type="button" class="networkConnection" data-connection="family" name="coordination">မိသားစု</button>
 
+
 <!-- relationships	employer_employee	employer/employee	အလုပ်ရှင်/လုပ်သား -->
 <button type="button" class="networkConnection" data-connection="worker and employer" name="coordination">အလုပ်သမား/အလုပ်ရှင်</button>
 
@@ -822,6 +823,8 @@ require(['database',"{{expandFormDirRelativeUrlPath 'd3.js'}}"], function(databa
         simulation = d3version4.forceSimulation()
             .force("link", d3version4.forceLink().id(function(d) { return d.id; }))
             .force("charge", d3version4.forceManyBody().strength(-3500).distanceMax(3500).distanceMin(10))
+            //.force("charge", d3version4.forceManyBody().strength(-6000).distanceMax(6500).distanceMin(100))
+            //.force("charge", d3version4.forceManyBody().strength(-6000).distanceMax(6500).distanceMin(100))
             .force("center", d3version4.forceCenter(width / 2, height / 2));
 
 
